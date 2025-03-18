@@ -1,7 +1,6 @@
 pipeline {
     agent any
     tools {
-        // Spécifier le nom de l'outil Allure configuré dans Jenkins
         allure 'allure'  // Assurez-vous que ce nom correspond à celui configuré dans Jenkins
     }
     stages {
@@ -18,7 +17,7 @@ pipeline {
                     sh 'npm ci'
                     sh 'npx cucumber-js --tags post --format json:reports/cucumber-report.json'
                     // Stash des résultats allure
-                    stash name: 'allure-results', includes: 'allure-results/*'
+                    stash name: 'allure-results', includes: 'reports/cucumber-report.json'
                 }
             }
         }
@@ -28,18 +27,18 @@ pipeline {
             unstash 'allure-results' // Extraire les résultats
             script {
                 echo "Liste des fichiers dans allure-results :"
-                sh 'ls -al allure-results'  // Listez les fichiers dans allure-results pour vérifier
-                if (fileExists('allure-results') && fileExists('allure-results/*.json')) {
-                    echo "Dossier allure-results et fichiers JSON trouvés."
+                sh 'ls -al reports'  // Vérifie les fichiers dans reports
+                if (fileExists('reports/cucumber-report.json')) {
+                    echo "Fichier cucumber-report.json trouvé."
                     allure([
                         includeProperties: false,
                         jdk: '',
                         properties: [],
                         reportBuildPolicy: 'ALWAYS',
-                        results: [[path: 'allure-results']]
+                        results: [[path: 'reports/cucumber-report.json']]
                     ])
                 } else {
-                    echo "Aucun fichier JSON trouvé dans allure-results."
+                    echo "Fichier cucumber-report.json non trouvé dans reports."
                 }
             }
         }
