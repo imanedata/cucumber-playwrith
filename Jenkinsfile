@@ -29,8 +29,8 @@ pipeline {
             script {
                 echo "Liste des fichiers dans allure-results :"
                 sh 'ls -al allure-results'  // Listez les fichiers dans allure-results pour vérifier
-                if (fileExists('allure-results')) {
-                    echo "Dossier allure-results trouvé."
+                if (fileExists('allure-results') && fileExists('allure-results/*.json')) {
+                    echo "Dossier allure-results et fichiers JSON trouvés."
                     allure([
                         includeProperties: false,
                         jdk: '',
@@ -39,7 +39,7 @@ pipeline {
                         results: [[path: 'allure-results']]
                     ])
                 } else {
-                    echo "Aucun fichier trouvé dans allure-results."
+                    echo "Aucun fichier JSON trouvé dans allure-results."
                 }
             }
         }
