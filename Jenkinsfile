@@ -26,8 +26,9 @@ pipeline {
         always {
             unstash 'allure-results' // Extraire les résultats
             script {
-                echo "Liste des fichiers dans allure-results :"
-                sh 'ls -al reports'  // Vérifie les fichiers dans reports
+                echo "Liste des fichiers dans reports :"
+                sh 'ls -al reports'  // Vérifie les fichiers dans le répertoire reports
+                // Vérification explicite de l'existence du fichier
                 if (fileExists('reports/cucumber-report.json')) {
                     echo "Fichier cucumber-report.json trouvé."
                     allure([
@@ -39,6 +40,7 @@ pipeline {
                     ])
                 } else {
                     echo "Fichier cucumber-report.json non trouvé dans reports."
+                    error("Le fichier cucumber-report.json est manquant.")
                 }
             }
         }
