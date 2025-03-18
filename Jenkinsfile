@@ -26,10 +26,11 @@ pipeline {
     post {
         always {
             unstash 'allure-results' // Extraire les résultats
-            script {
-                echo "Liste des contenus de allure-results :"
-                sh 'ls -al allure-results'
-                
+        script {
+            echo "Liste des fichiers dans allure-results :"
+            sh 'ls -al allure-results'  // Listez les fichiers dans allure-results pour vérifier
+            if (fileExists('allure-results')) {
+                echo "Dossier allure-results trouvé."
                 allure([
                     includeProperties: false,
                     jdk: '',
@@ -37,6 +38,8 @@ pipeline {
                     reportBuildPolicy: 'ALWAYS',
                     results: [[path: 'allure-results']]
                 ])
+            } else {
+                echo "Aucun fichier trouvé dans allure-results."
             }
         }
     }
