@@ -17,7 +17,7 @@ class LoginPage {
     };
 
     async goto() {
-        await this.page.goto('http://192.168.42.1:8030//admin');
+        await this.page.goto('http://192.168.42.1:8030/admin/login/?next=/admin/');
     }
 
     async fillUsername(username: string){
