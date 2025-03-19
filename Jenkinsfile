@@ -20,7 +20,6 @@ pipeline {
     }
     post {
         always {
-           agent any
             unstash 'allure-results' //extract results
             script {
                 allure([
